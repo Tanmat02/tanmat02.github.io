@@ -41,10 +41,6 @@ section.level{margin-top:40px}
 section.level h2{font-size:18px;font-weight:600;margin:0 0 6px}
 section.level p{color:var(--muted);margin:0 0 12px;font-size:14px}
 h2.sec{font-size:18px;font-weight:600;margin:32px 0 8px}
-.kw{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}
-.kw button{border:1px solid var(--line);background:var(--card);color:var(--text);border-radius:8px;padding:4px 10px;font-size:13px;cursor:pointer}
-.kw button small{color:var(--muted);margin-left:4px}
-.kw button[aria-pressed="true"]{background:var(--accent-bg);border-color:var(--accent);color:var(--accent)}
 .board{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}
 .col h3{font-size:13px;color:var(--muted);font-weight:500;margin:0 0 8px}
 .card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-bottom:8px;cursor:pointer;text-align:left;width:100%;color:var(--text);font:inherit}
@@ -70,9 +66,6 @@ h2.sec{font-size:18px;font-weight:600;margin:32px 0 8px}
     <input type="search" id="q" placeholder="검색 (예: ROS2, 전장, 경로)">
   </div>
 
-  <h2 class="sec">기술 키워드</h2>
-  <div class="kw" id="kw" role="group" aria-label="기술 키워드"></div>
-
   <h2 class="sec">분류별 보기</h2>
   <div class="board" id="board"></div>
 
@@ -88,7 +81,7 @@ h2.sec{font-size:18px;font-weight:600;margin:32px 0 8px}
 <script>
 const CATS = ["전체","프로젝트","교육","수업","자격증","목표"];
 const STATUS = {"완료":"s-done","진행 중":"s-doing","예정":"s-plan","계획":"s-plan"};
-let cat = "전체", q = "", open = null, kw = null;
+let cat = "전체", q = "", open = null;
 const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 
 function stats(){
@@ -107,7 +100,6 @@ function chips(){
 }
 function match(i){
   if (cat !== "전체" && i.category !== cat) return false;
-  if (kw && !(i.tags||[]).includes(kw)) return false;
   if (!q) return true;
   return JSON.stringify(i).toLowerCase().includes(q.toLowerCase());
 }
@@ -117,14 +109,6 @@ function detail(i){
   return `<div class="detail">${i.org?`<div style="color:var(--muted);font-size:13px">${esc(i.org)}</div>`:""}
     <p style="margin:6px 0">${esc(i.summary)}</p>
     ${list("한 일", i.did)}${list("알게 된 것", i.learned)}${list("결과", i.results)}${links}</div>`;
-}
-function keywords(){
-  const count = {};
-  ITEMS.forEach(i => (i.tags||[]).forEach(t => count[t] = (count[t]||0) + 1));
-  const list = Object.entries(count).sort((a,b) => b[1]-a[1] || a[0].localeCompare(b[0]));
-  const el = document.getElementById("kw");
-  el.innerHTML = list.map(([t,n]) => `<button aria-pressed="${kw===t}" data-t="${esc(t)}">${esc(t)}<small>${n}</small></button>`).join("");
-  el.querySelectorAll("button").forEach(b => b.onclick = () => { kw = kw===b.dataset.t ? null : b.dataset.t; open = null; render(); });
 }
 function board(){
   const cols = CATS.filter(c => c !== "전체" && (cat === "전체" || c === cat));
@@ -143,7 +127,7 @@ function board(){
     document.querySelector(`tr.row[data-id="${c.dataset.id}"]`)?.scrollIntoView({behavior:"smooth", block:"center"});
   });
 }
-function render(){ chips(); keywords(); board(); rows(); }
+function render(){ chips(); board(); rows(); }
 function rows(){
   const list = ITEMS.filter(match).sort((a,b) => (b.start||"").localeCompare(a.start||""));
   const tb = document.getElementById("rows");
