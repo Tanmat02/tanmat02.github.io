@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>한정민 활동 기록</title>
+<meta name="description" content="기계자동차공학 전공자의 프로젝트, 교육, 수업, 자격증 기록">
+<style>
+:root{--bg:#f7f7f5;--card:#fff;--text:#1d1d1b;--muted:#6b6a65;--line:#e3e2dc;--accent:#185fa5;--accent-bg:#e6f1fb;--ok:#3b6d11;--ok-bg:#eaf3de;--warn:#854f0b;--warn-bg:#faeeda;--plan:#534ab7;--plan-bg:#eeedfe}
+@media (prefers-color-scheme:dark){:root{--bg:#181816;--card:#22221f;--text:#ecebe6;--muted:#a3a29c;--line:#3a3935;--accent:#85b7eb;--accent-bg:#0c2c4d;--ok:#c0dd97;--ok-bg:#1f3a0a;--warn:#fac775;--warn-bg:#4a2c05;--plan:#cecbf6;--plan-bg:#2d2766}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Pretendard","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;line-height:1.6}
+.wrap{max-width:1040px;margin:0 auto;padding:32px 16px 64px}
+header h1{font-size:26px;margin:0 0 4px;font-weight:600}
+header p{margin:0;color:var(--muted)}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:24px 0}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.stat b{display:block;font-size:22px;font-weight:600}
+.stat span{font-size:13px;color:var(--muted)}
+.controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:8px 0 16px}
+.chip{border:1px solid var(--line);background:var(--card);color:var(--text);border-radius:999px;padding:6px 14px;font-size:14px;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--accent-bg);border-color:var(--accent);color:var(--accent)}
+input[type=search]{flex:1;min-width:180px;padding:8px 12px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--text);font-size:14px}
+table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top;font-size:14px}
+th{font-size:12px;color:var(--muted);font-weight:500;background:var(--bg)}
+tr.row{cursor:pointer}
+tr.row:hover td{background:var(--bg)}
+tr.detail td{background:var(--bg);padding:14px 16px}
+.detail h4{margin:10px 0 4px;font-size:13px;color:var(--muted);font-weight:500}
+.detail ul{margin:0;padding-left:18px}
+.badge{display:inline-block;font-size:12px;padding:2px 8px;border-radius:6px;white-space:nowrap}
+.s-done{background:var(--ok-bg);color:var(--ok)}
+.s-doing{background:var(--warn-bg);color:var(--warn)}
+.s-plan{background:var(--plan-bg);color:var(--plan)}
+.tags{display:flex;flex-wrap:wrap;gap:4px}
+.tag{font-size:12px;color:var(--muted);border:1px solid var(--line);border-radius:6px;padding:1px 6px}
+a{color:var(--accent)}
+.empty{padding:24px;text-align:center;color:var(--muted)}
+section.level{margin-top:40px}
+section.level h2{font-size:18px;font-weight:600;margin:0 0 6px}
+section.level p{color:var(--muted);margin:0 0 12px;font-size:14px}
+h2.sec{font-size:18px;font-weight:600;margin:32px 0 8px}
+.kw{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}
+.kw button{border:1px solid var(--line);background:var(--card);color:var(--text);border-radius:8px;padding:4px 10px;font-size:13px;cursor:pointer}
+.kw button small{color:var(--muted);margin-left:4px}
+.kw button[aria-pressed="true"]{background:var(--accent-bg);border-color:var(--accent);color:var(--accent)}
+.board{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}
+.col h3{font-size:13px;color:var(--muted);font-weight:500;margin:0 0 8px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-bottom:8px;cursor:pointer;text-align:left;width:100%;color:var(--text);font:inherit}
+.card:hover{border-color:var(--accent)}
+.card b{display:block;font-size:14px;font-weight:500;margin:4px 0}
+.card .meta{font-size:12px;color:var(--muted)}
+.card .tags{margin-top:6px}
+.col .none{font-size:13px;color:var(--muted);padding:8px 0}
+@media (max-width:640px){.hide-sm{display:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>한정민 활동 기록</h1>
+    <p>전주대학교 기계자동차공학과 4학년 (복수전공 축구학과) · 자작 전기자동차를 만들고 있고, 이 차에 자율주행을 넣는 것이 다음 목표입니다.</p>
+  </header>
+
+  <div class="stats" id="stats"></div>
+
+  <div class="controls" role="group" aria-label="분류">
+    <div id="chips" style="display:flex;flex-wrap:wrap;gap:8px"></div>
+    <input type="search" id="q" placeholder="검색 (예: ROS2, 전장, 경로)">
+  </div>
+
+  <h2 class="sec">기술 키워드</h2>
+  <div class="kw" id="kw" role="group" aria-label="기술 키워드"></div>
+
+  <h2 class="sec">분류별 보기</h2>
+  <div class="board" id="board"></div>
+
+  <h2 class="sec" id="list-title">전체 목록</h2>
+  <table aria-label="활동 목록">
+    <thead><tr><th>분류</th><th>이름</th><th class="hide-sm">기간</th><th>상태</th><th class="hide-sm">기술·키워드</th></tr></thead>
+    <tbody id="rows"></tbody>
+  </table>
+
+</div>
+
+<script src="data/items.js"></script>
+<script>
+const CATS = ["전체","프로젝트","교육","수업","자격증","목표"];
+const STATUS = {"완료":"s-done","진행 중":"s-doing","예정":"s-plan","계획":"s-plan"};
+let cat = "전체", q = "", open = null, kw = null;
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+function stats(){
+  const n = c => ITEMS.filter(i => i.category === c).length;
+  const box = [
+    ["프로젝트", n("프로젝트")],
+    ["교육 이수 시간", ITEMS.filter(i=>i.category==="교육").reduce((a,i)=>a+(i.hours||0),0) + "시간"],
+    ["수업 기록", n("수업")],
+    ["자격증", n("자격증")]
+  ];
+  document.getElementById("stats").innerHTML = box.map(([k,v]) => `<div class="stat"><b>${esc(v)}</b><span>${esc(k)}</span></div>`).join("");
+}
+function chips(){
+  document.getElementById("chips").innerHTML = CATS.map(c => `<button class="chip" aria-pressed="${c===cat}" data-c="${c}">${c}</button>`).join("");
+  document.querySelectorAll(".chip").forEach(b => b.onclick = () => { cat = b.dataset.c; open = null; render(); });
+}
+function match(i){
+  if (cat !== "전체" && i.category !== cat) return false;
+  if (kw && !(i.tags||[]).includes(kw)) return false;
+  if (!q) return true;
+  return JSON.stringify(i).toLowerCase().includes(q.toLowerCase());
+}
+function detail(i){
+  const list = (t, a) => a && a.length ? `<h4>${t}</h4><ul>${a.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>` : "";
+  const links = i.links && i.links.length ? `<h4>자료</h4><ul>${i.links.map(l=>`<li><a href="${esc(l.url)}">${esc(l.label)}</a></li>`).join("")}</ul>` : "";
+  return `<div class="detail">${i.org?`<div style="color:var(--muted);font-size:13px">${esc(i.org)}</div>`:""}
+    <p style="margin:6px 0">${esc(i.summary)}</p>
+    ${list("한 일", i.did)}${list("알게 된 것", i.learned)}${list("결과", i.results)}${links}</div>`;
+}
+function keywords(){
+  const count = {};
+  ITEMS.forEach(i => (i.tags||[]).forEach(t => count[t] = (count[t]||0) + 1));
+  const list = Object.entries(count).sort((a,b) => b[1]-a[1] || a[0].localeCompare(b[0]));
+  const el = document.getElementById("kw");
+  el.innerHTML = list.map(([t,n]) => `<button aria-pressed="${kw===t}" data-t="${esc(t)}">${esc(t)}<small>${n}</small></button>`).join("");
+  el.querySelectorAll("button").forEach(b => b.onclick = () => { kw = kw===b.dataset.t ? null : b.dataset.t; open = null; render(); });
+}
+function board(){
+  const cols = CATS.filter(c => c !== "전체" && (cat === "전체" || c === cat));
+  document.getElementById("board").innerHTML = cols.map(c => {
+    const items = ITEMS.filter(i => i.category === c && match(i)).sort((a,b) => (b.start||"").localeCompare(a.start||""));
+    return `<div class="col"><h3>${esc(c)} · ${items.length}</h3>${items.length ? items.map(i => `
+      <button class="card" data-id="${esc(i.id)}">
+        <span class="badge ${STATUS[i.status]||""}">${esc(i.status)}</span>
+        <b>${esc(i.title)}</b>
+        <span class="meta">${esc(i.start||"")}${i.end?" ~ "+esc(i.end):(i.start?" ~":"")}</span>
+        <div class="tags">${(i.tags||[]).slice(0,4).map(t=>`<span class="tag">${esc(t)}</span>`).join("")}</div>
+      </button>`).join("") : `<div class="none">해당 항목 없음</div>`}</div>`;
+  }).join("");
+  document.querySelectorAll(".card").forEach(c => c.onclick = () => {
+    open = c.dataset.id; rows();
+    document.querySelector(`tr.row[data-id="${c.dataset.id}"]`)?.scrollIntoView({behavior:"smooth", block:"center"});
+  });
+}
+function render(){ chips(); keywords(); board(); rows(); }
+function rows(){
+  const list = ITEMS.filter(match).sort((a,b) => (b.start||"").localeCompare(a.start||""));
+  const tb = document.getElementById("rows");
+  if (!list.length){ tb.innerHTML = `<tr><td colspan="5" class="empty">조건에 맞는 항목이 없습니다</td></tr>`; return; }
+  tb.innerHTML = list.map(i => `
+    <tr class="row" data-id="${esc(i.id)}" tabindex="0" aria-expanded="${open===i.id}">
+      <td style="white-space:nowrap">${esc(i.category)}</td>
+      <td><b style="font-weight:500">${esc(i.title)}</b></td>
+      <td class="hide-sm" style="white-space:nowrap">${esc(i.start||"")}${i.end?" ~ "+esc(i.end):(i.start?" ~":"")}</td>
+      <td><span class="badge ${STATUS[i.status]||""}">${esc(i.status)}</span></td>
+      <td class="hide-sm"><div class="tags">${(i.tags||[]).map(t=>`<span class="tag">${esc(t)}</span>`).join("")}</div></td>
+    </tr>${open===i.id?`<tr class="detail"><td colspan="5">${detail(i)}</td></tr>`:""}`).join("");
+  tb.querySelectorAll("tr.row").forEach(r => {
+    const t = () => { open = open===r.dataset.id ? null : r.dataset.id; rows(); };
+    r.onclick = t; r.onkeydown = e => { if (e.key==="Enter"||e.key===" ") { e.preventDefault(); t(); } };
+  });
+}
+document.getElementById("q").oninput = e => { q = e.target.value.trim(); board(); rows(); };
+stats(); render();
+</script>
+</body>
+</html>
