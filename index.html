@@ -79,7 +79,7 @@ h2.sec{font-size:18px;font-weight:600;margin:32px 0 8px}
 
 <script src="data/items.js"></script>
 <script>
-const CATS = ["전체","프로젝트","교육","수업","자격증","목표"];
+const CATS = ["전체","프로젝트","교육","수업","수상","자격증","목표"];
 const STATUS = {"완료":"s-done","진행 중":"s-doing","예정":"s-plan","계획":"s-plan"};
 let cat = "전체", q = "", open = null;
 const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
@@ -89,8 +89,8 @@ function stats(){
   const box = [
     ["프로젝트", n("프로젝트")],
     ["교육 이수 시간", ITEMS.filter(i=>i.category==="교육").reduce((a,i)=>a+(i.hours||0),0) + "시간"],
-    ["수업 기록", n("수업")],
-    ["자격증", n("자격증")]
+    ["전체 평점 (2025-2학기까지)", "4.38 / 4.5"],
+    ["성적우수상 (최우등)", "6회"]
   ];
   document.getElementById("stats").innerHTML = box.map(([k,v]) => `<div class="stat"><b>${esc(v)}</b><span>${esc(k)}</span></div>`).join("");
 }
