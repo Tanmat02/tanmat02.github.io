@@ -41,6 +41,16 @@ ul{padding-left:20px;margin:6px 0}
 .note{font-size:13px;color:var(--muted);margin:0 0 10px}
 .figs{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
 .figs figure{margin:0}
+.yr{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin-bottom:14px}
+.yr h3{font-size:16px;font-weight:600;margin:0 0 8px}
+.yr table{width:100%;border-collapse:collapse;font-size:14px}
+.yr td,.yr th{border-top:1px solid var(--line);padding:8px 6px;text-align:left;vertical-align:top}
+.yr th{font-size:12px;color:var(--muted);font-weight:500;border-top:none}
+.gpa{font-weight:600;white-space:nowrap}
+.cg{display:flex;flex-wrap:wrap;gap:6px}
+.cg span{border:1px solid var(--line);border-radius:6px;padding:2px 8px;font-size:13px;white-space:nowrap}
+.cg b{font-weight:600;color:var(--warn);margin-left:2px}
+.cg b.gap{color:var(--ok)} .cg b.gp{color:var(--muted)}
 .mod{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin-bottom:14px}
 .mod h3{font-size:16px;font-weight:600;margin:0}
 .mod .when{font-size:13px;color:var(--muted)}
@@ -74,6 +84,7 @@ if (!i) {
     ${fig(d.cover)}
     <p>${esc(i.summary)}</p>
     ${sec("문제", d.problem ? `<p>${esc(d.problem)}</p>` : "")}
+    ${(d.semesters||[]).length ? (()=>{ const years=[...new Set(d.semesters.map(x=>x.year))]; return `<section><h2>학년별 수강 과목과 평점</h2><div class="results" style="margin-bottom:14px"><div><b style="font-size:20px">${esc(d.cum.toFixed(2))} / 4.5</b><br>전체 평점</div><div><b style="font-size:20px">${esc(d.credits)}</b><br>이수 학점</div></div>${years.map(y=>{const rows=d.semesters.filter(x=>x.year===y); return `<div class="yr"><h3>${esc(y)} · ${esc(rows[0].grade)}</h3><table><tr><th>학기</th><th>학점</th><th>평점</th><th>수강 과목</th></tr>${rows.map(r=>`<tr><td style="white-space:nowrap">${esc(r.term)}</td><td>${esc(r.credits)}</td><td class="gpa">${r.gpa==null?"P":esc(r.gpa.toFixed(2))}</td><td><div class="cg">${r.courses.map(c=>`<span>${esc(c.name)} <b class="g${c.grade==="A+"?"ap":c.grade==="P"?"p":""}">${esc(c.grade)}</b></span>`).join("")}</div></td></tr>`).join("")}</table></div>`}).join("")}${d.semNote?`<p class="note">${esc(d.semNote)}</p>`:""}</section>`; })() : ""}
     ${sec("모듈별로 배운 것", (d.modules||[]).length ? d.modules.map(m => `<div class="mod"><h3>${esc(m.name)}</h3>${m.when?`<div class="when">${esc(m.when)}</div>`:""}${m.learned&&m.learned.length?`<h4>배운 개념</h4>${list(m.learned)}`:""}${m.did&&m.did.length?`<h4>실습에서 한 일</h4>${list(m.did)}`:""}${m.result?`<h4>결과</h4><p style="margin:0">${esc(m.result)}</p>`:""}${fig(m)}</div>`).join("") : "")}
     ${sec("시스템 구조", (d.flow||[]).length ? `${d.flowNote?`<p class="note">${esc(d.flowNote)}</p>`:""}<div class="flow">${d.flow.map((f,k)=>`${k?'<span class="arr">→</span>':''}<span class="box">${esc(f.name)}${f.how?`<small>${esc(f.how)}</small>`:""}</span>`).join("")}</div>${fig(d.flowFig)}` : "")}
     ${sec(d.stepsTitle || "한 일", (d.steps||[]).length ? d.steps.map(s => `<div class="step"><h3>${esc(s.title)}</h3><p>${esc(s.text)}</p>${s.ai?`<p class="ai"><b>AI 활용</b>${esc(s.ai)}</p>`:""}${fig(s)}</div>`).join("") : ((d.modules||[]).length ? "" : list(i.did)))}
