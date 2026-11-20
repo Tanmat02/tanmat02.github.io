@@ -75,7 +75,7 @@ if (!i) {
     <p>${esc(i.summary)}</p>
     ${sec("문제", d.problem ? `<p>${esc(d.problem)}</p>` : "")}
     ${sec("모듈별로 배운 것", (d.modules||[]).length ? d.modules.map(m => `<div class="mod"><h3>${esc(m.name)}</h3>${m.when?`<div class="when">${esc(m.when)}</div>`:""}${m.learned&&m.learned.length?`<h4>배운 개념</h4>${list(m.learned)}`:""}${m.did&&m.did.length?`<h4>실습에서 한 일</h4>${list(m.did)}`:""}${m.result?`<h4>결과</h4><p style="margin:0">${esc(m.result)}</p>`:""}${fig(m)}</div>`).join("") : "")}
-    ${sec("시스템 구조", (d.flow||[]).length ? `${d.flowNote?`<p class="note">${esc(d.flowNote)}</p>`:""}<div class="flow">${d.flow.map((f,k)=>`${k?'<span class="arr">→</span>':''}<span class="box">${esc(f.name)}${f.how?`<small>${esc(f.how)}</small>`:""}</span>`).join("")}</div>` : "")}
+    ${sec("시스템 구조", (d.flow||[]).length ? `${d.flowNote?`<p class="note">${esc(d.flowNote)}</p>`:""}<div class="flow">${d.flow.map((f,k)=>`${k?'<span class="arr">→</span>':''}<span class="box">${esc(f.name)}${f.how?`<small>${esc(f.how)}</small>`:""}</span>`).join("")}</div>${fig(d.flowFig)}` : "")}
     ${sec(d.stepsTitle || "한 일", (d.steps||[]).length ? d.steps.map(s => `<div class="step"><h3>${esc(s.title)}</h3><p>${esc(s.text)}</p>${s.ai?`<p class="ai"><b>AI 활용</b>${esc(s.ai)}</p>`:""}${fig(s)}</div>`).join("") : ((d.modules||[]).length ? "" : list(i.did)))}
     ${sec("AI 활용 방식", (d.ai||[]).length ? d.ai.map(a => `<div class="step"><h3>${esc(a.title)}</h3><p>${esc(a.text)}</p></div>`).join("") : "")}
     ${sec("결과", (i.results||[]).length ? `<div class="results">${i.results.map(r=>`<div>${esc(r)}</div>`).join("")}</div>${(d.figures||[]).length?`<div class="figs" style="margin-top:12px">${d.figures.map(fig).join("")}</div>`:""}` : "")}
