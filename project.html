@@ -80,7 +80,7 @@ if (!i) {
     ${sec("AI 활용 방식", (d.ai||[]).length ? d.ai.map(a => `<div class="step"><h3>${esc(a.title)}</h3><p>${esc(a.text)}</p></div>`).join("") : "")}
     ${sec("결과", (i.results||[]).length ? `<div class="results">${i.results.map(r=>`<div>${esc(r)}</div>`).join("")}</div>${(d.figures||[]).length?`<div class="figs" style="margin-top:12px">${d.figures.map(fig).join("")}</div>`:""}` : "")}
     ${sec((d.modules||[]).length ? "이 과정에서 얻은 것" : "배운 점", list(i.learned))}
-    ${sec(d.applyTitle || "활용 계획", (d.apply||[]).length ? `${d.applyNote?`<p class="note">${esc(d.applyNote)}</p>`:""}${d.apply.map(a=>`<div class="step"><h3>${esc(a.title)}</h3><p>${esc(a.text)}</p></div>`).join("")}` : "")}
+    ${sec(d.applyTitle || "활용 계획", (d.apply||[]).length ? `${d.applyNote?`<p class="note">${esc(d.applyNote)}</p>`:""}${d.apply.map(a=>`<div class="step">${a.title?`<h3>${esc(a.title)}</h3>`:""}${a.text?`<p>${esc(a.text)}</p>`:""}${fig(a)}</div>`).join("")}` : "")}
     ${sec("다음 단계", d.next ? `<p>${esc(d.next)}</p>` : "")}
     ${d.related ? `<p style="margin-top:28px"><a href="project.html?id=${encodeURIComponent(d.related.id)}">${esc(d.related.label)} →</a></p>` : ""}
     ${(i.links||[]).length ? `<section><h2>자료</h2><ul>${i.links.map(l=>`<li><a href="${esc(l.url)}">${esc(l.label)}</a></li>`).join("")}</ul></section>` : ""}
