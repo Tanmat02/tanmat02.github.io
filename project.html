@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>프로젝트 상세</title>
+<style>
+:root{--bg:#f7f7f5;--card:#fff;--text:#1d1d1b;--muted:#6b6a65;--line:#e3e2dc;--accent:#185fa5;--accent-bg:#e6f1fb;--ok:#3b6d11;--ok-bg:#eaf3de;--warn:#854f0b;--warn-bg:#faeeda;--plan:#534ab7;--plan-bg:#eeedfe}
+@media (prefers-color-scheme:dark){:root{--bg:#181816;--card:#22221f;--text:#ecebe6;--muted:#a3a29c;--line:#3a3935;--accent:#85b7eb;--accent-bg:#0c2c4d;--ok:#c0dd97;--ok-bg:#1f3a0a;--warn:#fac775;--warn-bg:#4a2c05;--plan:#cecbf6;--plan-bg:#2d2766}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Pretendard","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;line-height:1.7}
+.wrap{max-width:860px;margin:0 auto;padding:24px 16px 64px}
+a{color:var(--accent)}
+.back{font-size:14px;text-decoration:none}
+h1{font-size:26px;font-weight:600;margin:12px 0 6px;line-height:1.35}
+.meta{color:var(--muted);font-size:14px}
+.badge{display:inline-block;font-size:12px;padding:2px 8px;border-radius:6px;margin-right:6px}
+.s-done{background:var(--ok-bg);color:var(--ok)}.s-doing{background:var(--warn-bg);color:var(--warn)}.s-plan{background:var(--plan-bg);color:var(--plan)}
+.tags{display:flex;flex-wrap:wrap;gap:4px;margin:10px 0 0}
+.tag{font-size:12px;color:var(--muted);border:1px solid var(--line);border-radius:6px;padding:1px 6px}
+figure{margin:20px 0;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px}
+figure img{width:100%;height:auto;display:block;border-radius:6px;background:#fff}
+figcaption{font-size:13px;color:var(--muted);margin-top:6px}
+section{margin-top:32px}
+section h2{font-size:18px;font-weight:600;margin:0 0 8px;display:flex;gap:10px;align-items:baseline}
+section h2 span.n{color:var(--accent);font-size:14px}
+.step{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin-bottom:14px}
+.step h3{font-size:16px;font-weight:600;margin:0 0 4px}
+.step p{margin:0}
+.step .ai{margin-top:10px;padding:8px 12px;background:var(--accent-bg);border-radius:8px;font-size:14px}
+.step .ai b{color:var(--accent);font-weight:600;margin-right:6px}
+.step figure{margin:12px 0 0;border:none;padding:0}
+ul{padding-left:20px;margin:6px 0}
+.results{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px}
+.results div{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px;font-size:14px}
+.empty{color:var(--muted);padding:40px 0}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"><p class="empty">불러오는 중…</p></div>
+<script src="data/items.js"></script>
+<script>
+const STATUS = {"완료":"s-done","진행 중":"s-doing","예정":"s-plan","계획":"s-plan"};
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const fig = f => f && f.img ? `<figure><img src="${esc(f.img)}" alt="${esc(f.caption||"")}" loading="lazy">${f.caption?`<figcaption>${esc(f.caption)}</figcaption>`:""}</figure>` : "";
+const list = a => a && a.length ? `<ul>${a.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>` : "";
+const id = new URLSearchParams(location.search).get("id");
+const i = ITEMS.find(x => x.id === id);
+const app = document.getElementById("app");
+if (!i) {
+  app.innerHTML = `<a class="back" href="./">← 목록으로</a><p class="empty">프로젝트를 찾을 수 없습니다.</p>`;
+} else {
+  const d = i.detail || {};
+  document.title = i.title;
+  let n = 0;
+  const sec = (title, body) => body ? `<section><h2><span class="n">${++n}</span>${esc(title)}</h2>${body}</section>` : "";
+  app.innerHTML = `
+    <a class="back" href="./">← 목록으로</a>
+    <h1>${esc(i.title)}</h1>
+    <div class="meta"><span class="badge ${STATUS[i.status]||""}">${esc(i.status)}</span>${esc(i.org||"")} · ${esc(i.start||"")}${i.end?" ~ "+esc(i.end):" ~"}</div>
+    <div class="tags">${(i.tags||[]).map(t=>`<span class="tag">${esc(t)}</span>`).join("")}</div>
+    ${fig(d.cover)}
+    <p>${esc(i.summary)}</p>
+    ${sec("문제", d.problem ? `<p>${esc(d.problem)}</p>` : "")}
+    ${sec("한 일", (d.steps||[]).length ? d.steps.map(s => `<div class="step"><h3>${esc(s.title)}</h3><p>${esc(s.text)}</p>${s.ai?`<p class="ai"><b>AI 활용</b>${esc(s.ai)}</p>`:""}${fig(s)}</div>`).join("") : list(i.did))}
+    ${sec("AI 활용 방식", (d.ai||[]).length ? d.ai.map(a => `<div class="step"><h3>${esc(a.title)}</h3><p>${esc(a.text)}</p></div>`).join("") : "")}
+    ${sec("결과", (i.results||[]).length ? `<div class="results">${i.results.map(r=>`<div>${esc(r)}</div>`).join("")}</div>` : "")}
+    ${sec("배운 점", list(i.learned))}
+    ${sec("다음 단계", d.next ? `<p>${esc(d.next)}</p>` : "")}
+    ${(i.links||[]).length ? `<section><h2>자료</h2><ul>${i.links.map(l=>`<li><a href="${esc(l.url)}">${esc(l.label)}</a></li>`).join("")}</ul></section>` : ""}
+  `;
+}
+</script>
+</body>
+</html>

@@ -108,7 +108,7 @@ function detail(i){
   const links = i.links && i.links.length ? `<h4>자료</h4><ul>${i.links.map(l=>`<li><a href="${esc(l.url)}">${esc(l.label)}</a></li>`).join("")}</ul>` : "";
   return `<div class="detail">${i.org?`<div style="color:var(--muted);font-size:13px">${esc(i.org)}</div>`:""}
     <p style="margin:6px 0">${esc(i.summary)}</p>
-    ${list("한 일", i.did)}${list("알게 된 것", i.learned)}${list("결과", i.results)}${links}</div>`;
+    ${i.detail?`<p><a href="project.html?id=${encodeURIComponent(i.id)}">자세히 보기 →</a></p>`:""}${list("한 일", i.did)}${list("알게 된 것", i.learned)}${list("결과", i.results)}${links}</div>`;
 }
 function board(){
   const cols = CATS.filter(c => c !== "전체" && (cat === "전체" || c === cat));
@@ -123,6 +123,8 @@ function board(){
       </button>`).join("") : `<div class="none">해당 항목 없음</div>`}</div>`;
   }).join("");
   document.querySelectorAll(".card").forEach(c => c.onclick = () => {
+    const it = ITEMS.find(x => x.id === c.dataset.id);
+    if (it && it.detail) { location.href = "project.html?id=" + encodeURIComponent(it.id); return; }
     open = c.dataset.id; rows();
     document.querySelector(`tr.row[data-id="${c.dataset.id}"]`)?.scrollIntoView({behavior:"smooth", block:"center"});
   });
